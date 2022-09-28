@@ -145,6 +145,4 @@ public class Vehicle implements Comparable<Vehicle>{
     public void setTankCapacity(double tankCapacity) {
         this.tankCapacity = tankCapacity;
     }
-
-
 }
