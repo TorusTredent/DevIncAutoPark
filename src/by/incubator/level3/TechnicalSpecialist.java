@@ -2,6 +2,9 @@ package by.incubator.level3;
 
 import by.incubator.level1.VehicleType;
 import by.incubator.level2.enums.Color;
+import by.incubator.level4.DieselEngine;
+import by.incubator.level4.ElectricEngine;
+import by.incubator.level4.GasolineEngine;
 
 public class TechnicalSpecialist {
 
@@ -34,5 +37,19 @@ public class TechnicalSpecialist {
 
     public static boolean validateModelName(String name) {
         return !name.isEmpty();
+    }
+
+    public static boolean validationGasolineEngine(GasolineEngine gasolineEngine) {
+        return (gasolineEngine != null && gasolineEngine.getEngineCapacity() >= 0 &&
+                gasolineEngine.getFuelConsumptionPer100() >= 0 && gasolineEngine.getFuelTankCapacity() >= 0);
+    }
+
+    public static boolean validationDieselEngine(DieselEngine dieselEngine) {
+        return (dieselEngine != null && dieselEngine.getEngineCapacity() >= 0 &&
+                dieselEngine.getFuelConsumptionPer100() >= 0 && dieselEngine.getFuelTankCapacity() >= 0);
+    }
+
+    public static boolean validationElectricalEngine(ElectricEngine electricEngine) {
+        return (electricEngine.getBatterySize() >= 0 && electricEngine.getElectricityConsumption() >= 0);
     }
 }
