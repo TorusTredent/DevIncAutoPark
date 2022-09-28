@@ -22,6 +22,7 @@ public class Main {
         VehicleType[] vehicleTypes = startLevel1();
         Vehicle[] vehicles = startLevel2(vehicleTypes);
         Vehicle[] vehiclesLevel3 = startLevel3(vehicleTypes);
+
     }
 
     private static VehicleType[] startLevel1() {
