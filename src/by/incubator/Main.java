@@ -10,7 +10,7 @@ public class Main {
     }
 
     private static VehicleType[] startLevel1() {
-        VehicleType[] vehicleType = initVehicleType();
+        VehicleType[] vehicleType = initVehicleTypeArray();
         for (VehicleType type : vehicleType) {
             type.display();
         }
@@ -41,7 +41,7 @@ public class Main {
     }
 
 
-    private static VehicleType[] initVehicleType() {
+    private static VehicleType[] initVehicleTypeArray() {
         return new VehicleType[]{
                 new VehicleType("Bus", 1.2),
                 new VehicleType("Car", 1),
