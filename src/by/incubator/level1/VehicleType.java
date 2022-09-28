@@ -17,8 +17,8 @@ public class VehicleType {
         System.out.println( "name = " + name + "\n" + "roadTaxCoefficient = " + roadTaxCoefficient);
     }
 
-    public void getString() {
-        System.out.println(name + "," + "'" + roadTaxCoefficient + "'");
+    public String getString() {
+        return name + "," + "'" + roadTaxCoefficient + "'";
     }
 
     public String getName() {
