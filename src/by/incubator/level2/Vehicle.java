@@ -2,6 +2,8 @@ package by.incubator.level2;
 
 import by.incubator.level1.VehicleType;
 import by.incubator.level2.enums.Color;
+import by.incubator.level4.GasolineEngine;
+import by.incubator.level4.Startable;
 
 import java.util.Objects;
 
@@ -17,11 +19,13 @@ public class Vehicle implements Comparable<Vehicle> {
     private int mileage;
     private Color color;
     private double tankCapacity;
+    private Startable startable;
 
     public Vehicle() {
     }
 
-    public Vehicle(VehicleType vehicleType, String modelName, String regNumber, int weight, int manufactureYear, int mileage, Color color) {
+    public Vehicle(VehicleType vehicleType, String modelName, String regNumber, int weight,
+                   int manufactureYear, int mileage, Color color) {
         setVehicleType(vehicleType);
         setModelName(modelName);
         setRegNumber(regNumber);
@@ -31,57 +35,16 @@ public class Vehicle implements Comparable<Vehicle> {
         setColor(color);
     }
 
-    public double getCalcTaxPerMonth() {
-        return (weight * 0.0013) + (vehicleType.getRoadTaxCoefficient() * 30) + 5;
-    }
-
-    @Override
-    public String toString() {
-        return vehicleType.getString() + ", "
-                + modelName + ", "
-                + regNumber + ", "
-                + regNumber + ", "
-                + weight + ", "
-                + manufactureYear + ", "
-                + mileage + ", "
-                + color + ", "
-                + tankCapacity + ", '"
-                + getCalcTaxPerMonth() + "'";
-
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Vehicle vehicle = (Vehicle) o;
-        return Objects.equals(vehicleType, vehicle.vehicleType) && Objects.equals(modelName, vehicle.modelName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(vehicleType, modelName);
-    }
-
-    @Override
-    public int compareTo(Vehicle o) {
-        if (this.getManufactureYear() == o.manufactureYear) {
-            return this.mileage - o.mileage;
-        } else {
-            return this.manufactureYear - o.manufactureYear;
-        }
-    }
-
-    public VehicleType getVehicleType() {
-        return vehicleType;
-    }
-
-    public void setVehicleType(VehicleType vehicleType) {
-        if (validateVehicleType(vehicleType)) {
-            this.vehicleType = vehicleType;
-        } else {
-            this.vehicleType = new VehicleType();
-        }
+    public Vehicle(VehicleType vehicleType, Startable startable, String modelName, String regNumber, int weight,
+                   int manufactureYear, int mileage, Color color) {
+        setVehicleType(vehicleType);
+        this.startable = startable;
+        setModelName(modelName);
+        setRegNumber(regNumber);
+        setWeight(weight);
+        setManufactureYear(manufactureYear);
+        setMileage(mileage);
+        setColor(color);
     }
 
     public String getModelName() {
@@ -162,5 +125,68 @@ public class Vehicle implements Comparable<Vehicle> {
 
     public void setTankCapacity(double tankCapacity) {
         this.tankCapacity = tankCapacity;
+    }
+
+    public Startable getStartable() {
+        return startable;
+    }
+
+    public void setStartable(Startable startable) {
+        this.startable = startable;
+    }
+
+    public double getCalcTaxPerMonth() {
+        return (weight * 0.0013) + (startable.getTaxPerMonth() *
+                vehicleType.getRoadTaxCoefficient() * 30) + 5;
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        if (validateVehicleType(vehicleType)) {
+            this.vehicleType = vehicleType;
+        } else {
+            this.vehicleType = new VehicleType();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return vehicleType.getString() + ", "
+                + modelName + ", "
+                + regNumber + ", "
+                + regNumber + ", "
+                + weight + ", "
+                + manufactureYear + ", "
+                + mileage + ", "
+                + color + ", "
+                + tankCapacity + ", '"
+                + getCalcTaxPerMonth() + "', "
+                + startable.toString();
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return Objects.equals(vehicleType, vehicle.vehicleType) && Objects.equals(modelName, vehicle.modelName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vehicleType, modelName);
+    }
+
+    @Override
+    public int compareTo(Vehicle o) {
+        if (this.getManufactureYear() == o.manufactureYear) {
+            return this.mileage - o.mileage;
+        } else {
+            return this.manufactureYear - o.manufactureYear;
+        }
     }
 }
