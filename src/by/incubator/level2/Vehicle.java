@@ -3,10 +3,11 @@ package by.incubator.level2;
 import by.incubator.level1.VehicleType;
 import by.incubator.level2.enums.Color;
 
-import java.time.LocalDate;
 import java.util.Objects;
 
-public class Vehicle implements Comparable<Vehicle>{
+import static by.incubator.level3.TechnicalSpecialist.*;
+
+public class Vehicle implements Comparable<Vehicle> {
 
     private VehicleType vehicleType;
     private String modelName;
@@ -20,26 +21,14 @@ public class Vehicle implements Comparable<Vehicle>{
     public Vehicle() {
     }
 
-    public Vehicle(VehicleType vehicleType, String modelName, String regNumber, int weight,
-                   int manufactureYear, int mileage, Color color, double tankCapacity) {
-        this.vehicleType = vehicleType;
-        this.modelName = modelName;
-        this.regNumber = regNumber;
-        this.weight = weight;
-        this.manufactureYear = manufactureYear;
-        this.mileage = mileage;
-        this.color = color;
-        this.tankCapacity = tankCapacity;
-    }
-
     public Vehicle(VehicleType vehicleType, String modelName, String regNumber, int weight, int manufactureYear, int mileage, Color color) {
-        this.vehicleType = vehicleType;
-        this.modelName = modelName;
-        this.regNumber = regNumber;
-        this.weight = weight;
-        this.manufactureYear = manufactureYear;
-        this.mileage = mileage;
-        this.color = color;
+        setVehicleType(vehicleType);
+        setModelName(modelName);
+        setRegNumber(regNumber);
+        setWeight(weight);
+        setManufactureYear(manufactureYear);
+        setMileage(mileage);
+        setColor(color);
     }
 
     public double getCalcTaxPerMonth() {
@@ -48,7 +37,7 @@ public class Vehicle implements Comparable<Vehicle>{
 
     @Override
     public String toString() {
-        return  vehicleType.getString() + ", "
+        return vehicleType.getString() + ", "
                 + modelName + ", "
                 + regNumber + ", "
                 + regNumber + ", "
@@ -66,13 +55,14 @@ public class Vehicle implements Comparable<Vehicle>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vehicle vehicle = (Vehicle) o;
-        return  Objects.equals(vehicleType, vehicle.vehicleType) && Objects.equals(modelName, vehicle.modelName);
+        return Objects.equals(vehicleType, vehicle.vehicleType) && Objects.equals(modelName, vehicle.modelName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(vehicleType, modelName);
     }
+
     @Override
     public int compareTo(Vehicle o) {
         if (this.getManufactureYear() == o.manufactureYear) {
@@ -87,7 +77,11 @@ public class Vehicle implements Comparable<Vehicle>{
     }
 
     public void setVehicleType(VehicleType vehicleType) {
-        this.vehicleType = vehicleType;
+        if (validateVehicleType(vehicleType)) {
+            this.vehicleType = vehicleType;
+        } else {
+            this.vehicleType = new VehicleType();
+        }
     }
 
     public String getModelName() {
@@ -95,7 +89,11 @@ public class Vehicle implements Comparable<Vehicle>{
     }
 
     public void setModelName(String modelName) {
-        this.modelName = modelName;
+        if (validateModelName(modelName)) {
+            this.modelName = modelName;
+        } else {
+            this.modelName = "none";
+        }
     }
 
     public String getRegNumber() {
@@ -103,7 +101,11 @@ public class Vehicle implements Comparable<Vehicle>{
     }
 
     public void setRegNumber(String regNumber) {
-        this.regNumber = regNumber;
+        if (validateRegistrationNumber(regNumber)) {
+            this.regNumber = regNumber;
+        } else {
+            this.regNumber = "none";
+        }
     }
 
     public int getWeight() {
@@ -111,7 +113,11 @@ public class Vehicle implements Comparable<Vehicle>{
     }
 
     public void setWeight(int weight) {
-        this.weight = weight;
+        if (validateWeight(weight)) {
+            this.weight = weight;
+        } else {
+            this.weight = 0;
+        }
     }
 
     public int getManufactureYear() {
@@ -119,7 +125,11 @@ public class Vehicle implements Comparable<Vehicle>{
     }
 
     public void setManufactureYear(int manufactureYear) {
-        this.manufactureYear = manufactureYear;
+        if (validateManufactureYear(manufactureYear)) {
+            this.manufactureYear = manufactureYear;
+        } else {
+            this.manufactureYear = 0;
+        }
     }
 
     public int getMileage() {
@@ -127,7 +137,11 @@ public class Vehicle implements Comparable<Vehicle>{
     }
 
     public void setMileage(int mileage) {
-        this.mileage = mileage;
+        if (validateMileage(mileage)) {
+            this.mileage = mileage;
+        } else {
+            this.mileage = 0;
+        }
     }
 
     public Color getColor() {
@@ -135,7 +149,11 @@ public class Vehicle implements Comparable<Vehicle>{
     }
 
     public void setColor(Color color) {
-        this.color = color;
+        if (validateColor(color)) {
+            this.color = color;
+        } else {
+            this.color = null;
+        }
     }
 
     public double getTankCapacity() {
