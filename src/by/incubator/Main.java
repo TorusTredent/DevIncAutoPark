@@ -13,39 +13,27 @@ public class Main {
 
     private static final Writer writer = new Writer();
     private static final Sorter sorter = new Sorter();
+
     public static void main(String[] args) {
         VehicleType[] vehicleTypes = startLevel1();
         Vehicle[] vehicles = startLevel2(vehicleTypes);
     }
 
     private static VehicleType[] startLevel1() {
-        VehicleType[] vehicleType = {
-                new VehicleType("Bus", 1.2),
-                new VehicleType("Car", 1),
-                new VehicleType("Rink", 1.5),
-                new VehicleType("Tractor", 1.2),
-        };
-
+        VehicleType[] vehicleType = initVehicleType();
         for (VehicleType type : vehicleType) {
             type.display();
         }
-
         vehicleType[vehicleType.length - 1].setRoadTaxCoefficient(1.3);
-
         double maxTax = Arrays.stream(vehicleType)
                 .mapToDouble(VehicleType::getRoadTaxCoefficient)
                 .filter(type -> type >= 0)
                 .max()
                 .orElse(0);
-
         double allTax = Arrays.stream(vehicleType)
                 .mapToDouble(VehicleType::getRoadTaxCoefficient)
                 .sum();
-
-        double averageTax = allTax/vehicleType.length;
-
-
-
+        double averageTax = allTax / vehicleType.length;
         maxTax = 0;
         averageTax = 0;
         allTax = 0;
@@ -53,19 +41,39 @@ public class Main {
             if (maxTax < vehicleType[i].getRoadTaxCoefficient()) {
                 maxTax = vehicleType[i].getRoadTaxCoefficient();
             }
-
             allTax += vehicleType[i].getRoadTaxCoefficient();
             if (i == vehicleType.length - 1) {
                 averageTax = allTax / vehicleType.length;
             }
-
             vehicleType[i].display();
         }
         return vehicleType;
     }
 
+    private static VehicleType[] initVehicleType() {
+        return new VehicleType[]{
+                new VehicleType("Bus", 1.2),
+                new VehicleType("Car", 1),
+                new VehicleType("Rink", 1.5),
+                new VehicleType("Tractor", 1.2),
+        };
+    }
+
     private static Vehicle[] startLevel2(VehicleType[] vehicleTypes) {
-        Vehicle[] vehicles = {
+        Vehicle[] vehicles = initVehicleArray(vehicleTypes);
+        writer.printArray(vehicles);
+        sorter.sortingVehicles(vehicles);
+        writer.print("After sorting: ");
+        writer.printArray(vehicles);
+        Vehicle vehicleWithMaxMileAge = findVehicleWithMaxMileAge(vehicles);
+        writer.print("Vehicle with max mileage: " + vehicleWithMaxMileAge);
+        Vehicle vehicleWithMinMileAge = findVehicleWithMinMileAge(vehicles);
+        writer.print("Vehicle with min mileage: " + vehicleWithMinMileAge);
+        return vehicles;
+    }
+
+    private static Vehicle[] initVehicleArray(VehicleType[] vehicleTypes) {
+        return new Vehicle[] {
                 new Vehicle(vehicleTypes[0], "Volkswagen Crafter", "5427 AX-7",
                         2022, 2015, 376000, Color.BLUE),
                 new Vehicle(vehicleTypes[0], "Volkswagen Crafter", "62427 AA-7",
@@ -81,20 +89,10 @@ public class Main {
                 new Vehicle(vehicleTypes[3], "МТЗ Беларус-1025.4", "1145 AB-7",
                         1200, 2020, 109, Color.RED)
         };
-        writer.printArray(vehicles);
-        sorter.sortingVehicles(vehicles);
-        writer.print("After sorting: ");
-        writer.printArray(vehicles);
-        Vehicle vehicleWithMaxMileAge = findVehicleWithMaxMileAge(vehicles);
-        writer.print("Vehicle with max mileage: " + vehicleWithMaxMileAge);
-        Vehicle vehicleWithMinMileAge = findVehicleWithMinMileAge(vehicles);
-        writer.print("Vehicle with min mileage: " + vehicleWithMinMileAge);
-        return vehicles;
     }
 
-
     private static Vehicle findVehicleWithMaxMileAge(Vehicle[] vehicles) {
-       return Arrays.stream(vehicles)
+        return Arrays.stream(vehicles)
                 .max(Comparator.comparing(Vehicle::getMileage))
                 .get();
     }
