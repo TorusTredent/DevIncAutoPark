@@ -36,5 +36,4 @@ public class VehicleType {
     public void setRoadTaxCoefficient(double roadTaxCoefficient) {
         this.roadTaxCoefficient = roadTaxCoefficient;
     }
-
 }

@@ -5,9 +5,11 @@ import by.incubator.level1.VehicleType;
 import java.util.Arrays;
 
 public class Main {
+
     public static void main(String[] args) {
         VehicleType[] vehicleTypes = startLevel1();
     }
+
 
     private static VehicleType[] startLevel1() {
         VehicleType[] vehicleType = initVehicleTypeArray();
@@ -39,7 +41,6 @@ public class Main {
         }
         return vehicleType;
     }
-
 
     private static VehicleType[] initVehicleTypeArray() {
         return new VehicleType[]{
