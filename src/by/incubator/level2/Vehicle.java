@@ -24,8 +24,7 @@ public class Vehicle implements Comparable<Vehicle> {
     public Vehicle() {
     }
 
-    public Vehicle(VehicleType vehicleType, String modelName, String regNumber, int weight,
-                   int manufactureYear, int mileage, Color color) {
+    public Vehicle(VehicleType vehicleType, String modelName, String regNumber, int weight, int manufactureYear, int mileage, Color color) {
         setVehicleType(vehicleType);
         setModelName(modelName);
         setRegNumber(regNumber);
@@ -165,6 +164,7 @@ public class Vehicle implements Comparable<Vehicle> {
                 + tankCapacity + ", '"
                 + getCalcTaxPerMonth() + "', "
                 + startable.toString();
+
     }
 
     @Override
