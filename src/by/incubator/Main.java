@@ -13,22 +13,19 @@ public class Main {
 
     private static VehicleType[] startLevel1() {
         VehicleType[] vehicleType = initVehicleTypeArray();
-        for (VehicleType type : vehicleType) {
-            type.display();
-        }
+        displayVehicleTypes(vehicleType);
         vehicleType[vehicleType.length - 1].setRoadTaxCoefficient(1.3);
-        double maxTax = Arrays.stream(vehicleType)
-                .mapToDouble(VehicleType::getRoadTaxCoefficient)
-                .filter(type -> type >= 0)
-                .max()
-                .orElse(0);
-        double allTax = Arrays.stream(vehicleType)
-                .mapToDouble(VehicleType::getRoadTaxCoefficient)
-                .sum();
+        double maxTax = getMaxTax(vehicleType);
+        double allTax = getAllTax(vehicleType);
         double averageTax = allTax / vehicleType.length;
-        maxTax = 0;
-        averageTax = 0;
-        allTax = 0;
+        combineAllTasksInCycle(vehicleType);
+        return vehicleType;
+    }
+
+    private static void combineAllTasksInCycle(VehicleType[] vehicleType) {
+        double maxTax = 0;
+        double averageTax = 0;
+        double allTax = 0;
         for (int i = 0; i < vehicleType.length; i++) {
             if (maxTax < vehicleType[i].getRoadTaxCoefficient()) {
                 maxTax = vehicleType[i].getRoadTaxCoefficient();
@@ -39,7 +36,26 @@ public class Main {
             }
             vehicleType[i].display();
         }
-        return vehicleType;
+    }
+
+    private static double getAllTax(VehicleType[] vehicleTypes) {
+        return Arrays.stream(vehicleTypes)
+                .mapToDouble(VehicleType::getRoadTaxCoefficient)
+                .sum();
+    }
+
+    private static double getMaxTax(VehicleType[] vehicleTypes) {
+        return Arrays.stream(vehicleTypes)
+                .mapToDouble(VehicleType::getRoadTaxCoefficient)
+                .filter(type -> type >= 0)
+                .max()
+                .orElse(0);
+    }
+
+    private static void displayVehicleTypes(VehicleType[] vehicleTypes) {
+        for (VehicleType vehicleType : vehicleTypes) {
+            vehicleType.display();
+        }
     }
 
     private static VehicleType[] initVehicleTypeArray() {
