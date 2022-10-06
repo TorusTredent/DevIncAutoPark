@@ -1,6 +1,6 @@
 package by.incubator;
 
-import by.incubator.level1.VehicleType;
+import by.incubator.entity.VehicleType;
 
 import java.util.Arrays;
 
