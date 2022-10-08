@@ -15,7 +15,6 @@ import java.util.Comparator;
 
 public class Main {
 
-    private static final Writer writer = new Writer();
     private static final Sorter sorter = new Sorter();
 
     public static void main(String[] args) {
@@ -66,14 +65,14 @@ public class Main {
 
     private static Vehicle[] startLevel2(VehicleType[] vehicleTypes) {
         Vehicle[] vehicles = initVehicleArray(vehicleTypes);
-        writer.printArray(vehicles);
+        Writer.printArray(vehicles);
         sorter.sortingVehicles(vehicles);
-        writer.print("After sorting: ");
-        writer.printArray(vehicles);
+        Writer.print("After sorting: ");
+        Writer.printArray(vehicles);
         Vehicle vehicleWithMaxMileAge = findVehicleWithMaxMileAge(vehicles);
-        writer.print("Vehicle with max mileage: " + vehicleWithMaxMileAge);
+        Writer.print("Vehicle with max mileage: " + vehicleWithMaxMileAge);
         Vehicle vehicleWithMinMileAge = findVehicleWithMinMileAge(vehicles);
-        writer.print("Vehicle with min mileage: " + vehicleWithMinMileAge);
+        Writer.print("Vehicle with min mileage: " + vehicleWithMinMileAge);
         return vehicles;
     }
 
@@ -110,10 +109,10 @@ public class Main {
 
     private static Vehicle[] startLevel3(VehicleType[] vehicleTypes) {
         Vehicle[] vehicles = initVehicleArrayForLvl3(vehicleTypes);
-        writer.printArray(vehicles);
+        Writer.printArray(vehicles);
         printIdenticalVehicles(vehicles);
         Vehicle vehicle = findVehicleThatWillTravelTheMaxDistance(vehicles);
-        writer.print(vehicle);
+        Writer.print(vehicle);
         return vehicles;
     }
 
@@ -149,8 +148,8 @@ public class Main {
             Vehicle vehicle = vehicles[i];
             for (int j = i + 1; j < vehicles.length; j++) {
                 if (vehicle.equals(vehicles[j])) {
-                    writer.print(vehicle);
-                    writer.print(vehicles[i]);
+                    Writer.print(vehicle);
+                    Writer.print(vehicles[i]);
                     break;
                 }
             }

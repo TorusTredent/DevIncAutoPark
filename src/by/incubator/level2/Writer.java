@@ -2,11 +2,15 @@ package by.incubator.level2;
 
 public class Writer {
 
-    public<T> void print(T text) {
+    public static <T> void print(T text) {
         System.out.println(text);
     }
 
-    public<T> void printArray(T[] array) {
+    public static <T> void printError(T text) {
+        System.err.println(text);
+    }
+
+    public static <T> void printArray(T[] array) {
         for (T item : array) {
             print(item);
         }
