@@ -4,7 +4,9 @@ import by.incubator.entity.enums.Color;
 
 public class TechnicalSpecialist {
 
-    public static final int LOWER_LIMIT_MANUFACTURE_YEAR = 1886;
+    private static final int LOWER_LIMIT_MANUFACTURE_YEAR = 1886;
+    private static final String REGEX_FOR_REG_NUMBER = "\\d{4}\\s[A-Z]{2}(-)\\d";
+
 
     public static boolean validateManufactureYear(int year) {
         return (year >= LOWER_LIMIT_MANUFACTURE_YEAR && year < 10000);
@@ -28,7 +30,7 @@ public class TechnicalSpecialist {
     }
 
     public static boolean validateRegistrationNumber(String number) {
-        return (number != null && number.matches("\\d{4}\\s[A-Z]{2}(-)\\d"));
+        return (number != null && number.matches(REGEX_FOR_REG_NUMBER));
     }
 
     public static boolean validateModelName(String name) {
