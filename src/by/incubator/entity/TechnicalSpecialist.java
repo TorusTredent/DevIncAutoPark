@@ -1,6 +1,7 @@
 package by.incubator.entity;
 
 import by.incubator.entity.enums.Color;
+import by.incubator.entity.vehicle.VehicleType;
 
 public class TechnicalSpecialist {
 

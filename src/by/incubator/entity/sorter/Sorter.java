@@ -1,4 +1,6 @@
-package by.incubator.entity;
+package by.incubator.entity.sorter;
+
+import by.incubator.entity.vehicle.Vehicle;
 
 public class Sorter {
     

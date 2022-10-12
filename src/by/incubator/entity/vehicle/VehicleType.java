@@ -1,4 +1,4 @@
-package by.incubator.entity;
+package by.incubator.entity.vehicle;
 
 public class VehicleType {
 
