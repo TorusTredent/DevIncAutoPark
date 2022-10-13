@@ -9,7 +9,12 @@ import by.incubator.level4.DieselEngine;
 import by.incubator.level4.ElectricEngine;
 import by.incubator.level4.GasolineEngine;
 import by.incubator.level4.Startable;
+import by.incubator.level6.Rent;
+import by.incubator.level6.VehicleCollection;
+import by.incubator.level6.VehicleComparator;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -18,9 +23,10 @@ public class Main {
     private static final Sorter sorter = new Sorter();
 
     public static void main(String[] args) {
-        VehicleType[] vehicleTypes = startLevel1();
-        Vehicle[] vehicles = startLevel2(vehicleTypes);
-        Vehicle[] vehiclesLevel3 = startLevel3(vehicleTypes);
+//        VehicleType[] vehicleTypes = startLevel1();
+//        Vehicle[] vehicles = startLevel2(vehicleTypes);
+//        Vehicle[] vehiclesLevel3 = startLevel3(vehicleTypes);
+        startLevel6();
     }
 
     private static VehicleType[] startLevel1() {
@@ -77,7 +83,7 @@ public class Main {
     }
 
     private static Vehicle[] initVehicleArray(VehicleType[] vehicleTypes) {
-        return new Vehicle[] {
+        return new Vehicle[]{
                 new Vehicle(vehicleTypes[0], "Volkswagen Crafter", "5427 AX-7",
                         2022, 2015, 376000, Color.BLUE),
                 new Vehicle(vehicleTypes[0], "Volkswagen Crafter", "62427 AA-7",
@@ -118,12 +124,12 @@ public class Main {
 
     private static Vehicle[] initVehicleArrayForLvl3(VehicleType[] vehicleTypes) {
         Startable gas = new GasolineEngine(2, 8.1, 75);
-        return new Vehicle[] {
+        return new Vehicle[]{
                 new Vehicle(vehicleTypes[0], new GasolineEngine(2, 8.1, 75),
                         "Volkswagen Crafter", "5427 AX-7", 2022,
                         2015, 376000, Color.BLUE),
                 new Vehicle(vehicleTypes[0], new GasolineEngine(2.18, 8.5, 75),
-                        "Volkswagen Crafter", "62427 AA-7",
+                        "Volkswagen Crafter", "6227 AA-7",
                         2500, 2014, 227010, Color.WHITE),
                 new Vehicle(vehicleTypes[0], new ElectricEngine(50, 150),
                         "Electric Bus E321", "6785 BA-7",
@@ -160,5 +166,45 @@ public class Main {
         return Arrays.stream(vehicles)
                 .max(Comparator.comparing(vehicle -> vehicle.getStartable().getMaxKilometers()))
                 .orElse(null);
+    }
+
+    private static void startLevel6() {
+        VehicleCollection vehicleCollection = new VehicleCollection("rents", "types", "vehicles");
+        vehicleCollection.display();
+        Vehicle vehicle = createNewVehicle();
+        vehicleCollection.insert(6, vehicle);
+        vehicleCollection.delete(1);
+        vehicleCollection.delete(4);
+        vehicleCollection.display();
+        vehicleCollection.sort(new VehicleComparator());
+        vehicleCollection.display();
+    }
+
+    private static Vehicle createNewVehicle() {
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            return new Vehicle(
+                    8,
+                    new VehicleType(
+                            "Car",
+                            1.4
+                    ),
+                    "Audi C5",
+                    "7771 AB-3",
+                    2000,
+                    2019,
+                    15500,
+                    Color.RED,
+                    new ElectricEngine(25, 70),
+                    Arrays.asList(new Rent(
+                                    format.parse("12.12.2019"),
+                                    60),
+                            new Rent(
+                                    format.parse("29.03.2019"),
+                                    90)));
+        } catch (ParseException e) {
+            Writer.printError("Wrong date format");
+        }
+        return null;
     }
 }
