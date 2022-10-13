@@ -12,11 +12,14 @@ import by.incubator.level4.Startable;
 import by.incubator.level6.Rent;
 import by.incubator.level6.VehicleCollection;
 import by.incubator.level6.VehicleComparator;
+import by.incubator.level7.VehicleWash;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 public class Main {
 
@@ -26,7 +29,8 @@ public class Main {
 //        VehicleType[] vehicleTypes = startLevel1();
 //        Vehicle[] vehicles = startLevel2(vehicleTypes);
 //        Vehicle[] vehiclesLevel3 = startLevel3(vehicleTypes);
-        startLevel6();
+        VehicleCollection vehicleCollection = startLevel6();
+        startLevel7(vehicleCollection);
     }
 
     private static VehicleType[] startLevel1() {
@@ -168,7 +172,7 @@ public class Main {
                 .orElse(null);
     }
 
-    private static void startLevel6() {
+    private static VehicleCollection startLevel6() {
         VehicleCollection vehicleCollection = new VehicleCollection("rents", "types", "vehicles");
         vehicleCollection.display();
         Vehicle vehicle = createNewVehicle();
@@ -178,6 +182,7 @@ public class Main {
         vehicleCollection.display();
         vehicleCollection.sort(new VehicleComparator());
         vehicleCollection.display();
+        return vehicleCollection;
     }
 
     private static Vehicle createNewVehicle() {
@@ -206,5 +211,13 @@ public class Main {
             Writer.printError("Wrong date format");
         }
         return null;
+    }
+
+    private static void startLevel7(VehicleCollection vehicleCollection) {
+        VehicleWash vehicleWash = new VehicleWash();
+        for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
+            vehicleWash.checkIn(vehicle);
+        }
+        vehicleCollection.getVehicleList().forEach(vehicle -> vehicleWash.wash());
     }
 }
