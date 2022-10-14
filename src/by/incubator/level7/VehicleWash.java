@@ -15,7 +15,12 @@ public class VehicleWash {
     }
 
     public void wash() {
-        Vehicle vehicle = queue.dequeue();
-        Writer.print("\n" + vehicle.getModelName() + " вымыто");
+        Vehicle vehicle;
+        try {
+            vehicle = queue.dequeue();
+            Writer.print("\n" + vehicle.getModelName() + " вымыто");
+        } catch (IllegalArgumentException e) {
+            Writer.printError(e.getMessage());
+        }
     }
 }
