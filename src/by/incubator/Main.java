@@ -13,6 +13,7 @@ import by.incubator.level6.Rent;
 import by.incubator.level6.VehicleCollection;
 import by.incubator.level6.VehicleComparator;
 import by.incubator.level7.VehicleWash;
+import by.incubator.level8.VehicleGarage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,11 +27,12 @@ public class Main {
     private static final Sorter sorter = new Sorter();
 
     public static void main(String[] args) {
-//        VehicleType[] vehicleTypes = startLevel1();
-//        Vehicle[] vehicles = startLevel2(vehicleTypes);
-//        Vehicle[] vehiclesLevel3 = startLevel3(vehicleTypes);
+        VehicleType[] vehicleTypes = startLevel1();
+        Vehicle[] vehicles = startLevel2(vehicleTypes);
+        Vehicle[] vehiclesLevel3 = startLevel3(vehicleTypes);
         VehicleCollection vehicleCollection = startLevel6();
         startLevel7(vehicleCollection);
+        startLevel8(vehicleCollection);
     }
 
     private static VehicleType[] startLevel1() {
@@ -219,5 +221,14 @@ public class Main {
             vehicleWash.checkIn(vehicle);
         }
         vehicleCollection.getVehicleList().forEach(vehicle -> vehicleWash.wash());
+    }
+
+    private static void startLevel8(VehicleCollection vehicleCollection) {
+        VehicleGarage vehicleGarage = new VehicleGarage();
+        for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
+            vehicleGarage.checkIn(vehicle);
+        }
+        Writer.print("Гараж заполнен");
+        vehicleCollection.getVehicleList().forEach(vehicle -> vehicleGarage.leave());
     }
 }
