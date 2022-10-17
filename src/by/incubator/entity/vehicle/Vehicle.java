@@ -1,5 +1,6 @@
-package by.incubator.entity;
+package by.incubator.entity.vehicle;
 
+import by.incubator.entity.engine.Startable;
 import by.incubator.entity.enums.Color;
 
 import java.util.Objects;
@@ -16,6 +17,8 @@ public class Vehicle implements Comparable<Vehicle> {
     private int mileage;
     private Color color;
     private double tankCapacity;
+    private Startable startable;
+
 
     public Vehicle() {
     }
@@ -30,8 +33,21 @@ public class Vehicle implements Comparable<Vehicle> {
         setColor(color);
     }
 
+    public Vehicle(VehicleType vehicleType, Startable startable, String modelName, String regNumber, int weight,
+                   int manufactureYear, int mileage, Color color) {
+        setVehicleType(vehicleType);
+        this.startable = startable;
+        setModelName(modelName);
+        setRegNumber(regNumber);
+        setWeight(weight);
+        setManufactureYear(manufactureYear);
+        setMileage(mileage);
+        setColor(color);
+    }
+
     public double getCalcTaxPerMonth() {
-        return (weight * 0.0013) + (vehicleType.getRoadTaxCoefficient() * 30) + 5;
+        return (weight * 0.0013) + (startable.getTaxPerMonth() *
+                vehicleType.getRoadTaxCoefficient() * 30) + 5;
     }
 
     @Override
@@ -39,13 +55,13 @@ public class Vehicle implements Comparable<Vehicle> {
         return  vehicleType.getString() + ", "
                 + modelName + ", "
                 + regNumber + ", "
-                + regNumber + ", "
                 + weight + ", "
                 + manufactureYear + ", "
                 + mileage + ", "
                 + color + ", "
                 + tankCapacity + ", '"
-                + getCalcTaxPerMonth() + "'";
+                + getCalcTaxPerMonth() + "', "
+                + startable.toString();
     }
 
     @Override
@@ -160,5 +176,13 @@ public class Vehicle implements Comparable<Vehicle> {
 
     public void setTankCapacity(double tankCapacity) {
         this.tankCapacity = tankCapacity;
+    }
+
+    public Startable getStartable() {
+        return startable;
+    }
+
+    public void setStartable(Startable startable) {
+        this.startable = startable;
     }
 }
