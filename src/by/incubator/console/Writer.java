@@ -11,4 +11,8 @@ public class Writer {
             print(item);
         }
     }
+
+    public static <T> void printError(T text) {
+        System.err.println(text);
+    }
 }
