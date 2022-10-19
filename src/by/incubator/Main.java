@@ -14,25 +14,66 @@ import by.incubator.level6.VehicleCollection;
 import by.incubator.level6.VehicleComparator;
 import by.incubator.level7.VehicleWash;
 import by.incubator.level8.VehicleGarage;
+import by.incubator.level9.DefectedVehicleException;
+import by.incubator.level9.MechanicService;
+import by.incubator.level9.Randomizer;
+import sun.util.resources.LocaleData;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class Main {
 
     private static final Sorter sorter = new Sorter();
 
     public static void main(String[] args) {
-        VehicleType[] vehicleTypes = startLevel1();
-        Vehicle[] vehicles = startLevel2(vehicleTypes);
-        Vehicle[] vehiclesLevel3 = startLevel3(vehicleTypes);
         VehicleCollection vehicleCollection = startLevel6();
-        startLevel7(vehicleCollection);
-        startLevel8(vehicleCollection);
+        fixVehicles(vehicleCollection.getVehicleList());
+        Rent rent = rentVehicle(vehicleCollection.getVehicleList()
+                .get(Randomizer.getRandomNumber(vehicleCollection.getVehicleList().size())));
+    }
+
+
+    private static Rent rentVehicle(Vehicle vehicle) {
+        MechanicService mechanicService = new MechanicService();
+        mechanicService.detectBreaking(vehicle);
+        try {
+            if (mechanicService.isBroken(vehicle)) {
+                throw new DefectedVehicleException("The car has some breaks");
+            }
+            return new Rent(vehicle.getId(), new Date(), Randomizer.getRandomNumber(100));
+        } catch (DefectedVehicleException e) {
+            Writer.printError(e.getMessage());
+        }
+        return null;
+    }
+
+    private static void fixVehicles(List<Vehicle> vehicles) {
+        MechanicService mechanicService = new MechanicService();
+        int maxBreaks = 0;
+        Vehicle vehicleWithMaxBreaks = null;
+        for (Vehicle vehicle : vehicles) {
+            Map<String, Integer> map = mechanicService.detectBreaking(vehicle);
+            int breaksCount = getBreaksCount(map);
+            if (breaksCount == 0) {
+                Writer.print("Vehicle without breaks: " + vehicle);
+            }
+            if (maxBreaks < breaksCount) {
+                maxBreaks = breaksCount;
+                vehicleWithMaxBreaks = vehicle;
+            }
+            mechanicService.repair(vehicle);
+        }
+        Writer.print("Car with max number of breaks: " + vehicleWithMaxBreaks);
+    }
+
+    private static int getBreaksCount(Map<String, Integer> map) {
+        if (map.isEmpty()) return 0;
+        return map.values().stream()
+                .mapToInt(i -> i)
+                .sum();
     }
 
     private static VehicleType[] startLevel1() {
