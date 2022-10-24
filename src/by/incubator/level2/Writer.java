@@ -1,5 +1,7 @@
 package by.incubator.level2;
 
+import java.util.List;
+
 public class Writer {
 
     public static <T> void print(T text) {
@@ -29,5 +31,9 @@ public class Writer {
 
     public static void printfTotal(String textTotal, double sumTotalProfit) {
         System.out.printf(textTotal, "Total", sumTotalProfit);
+    }
+
+    public static <T> void printList(List<T> list) {
+        list.forEach(System.out::println);
     }
 }

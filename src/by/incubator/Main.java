@@ -1,6 +1,10 @@
 package by.incubator;
 
 import by.incubator.level1.VehicleType;
+import by.incubator.level10.ComparatorByDefectCount;
+import by.incubator.level10.ComparatorByTaxPerMonth;
+import by.incubator.level10.VehicleGarageStream;
+import by.incubator.level10.VehicleWashStream;
 import by.incubator.level2.Sorter;
 import by.incubator.level2.Vehicle;
 import by.incubator.level2.Writer;
@@ -17,27 +21,74 @@ import by.incubator.level8.VehicleGarage;
 import by.incubator.level9.DefectedVehicleException;
 import by.incubator.level9.MechanicService;
 import by.incubator.level9.Randomizer;
-import sun.util.resources.LocaleData;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
     private static final Sorter sorter = new Sorter();
+    private static final ComparatorByDefectCount comparatorByDefectCount = new ComparatorByDefectCount();
+    private static final ComparatorByTaxPerMonth comparatorByTaxPerMonth = new ComparatorByTaxPerMonth();
+    private static final  MechanicService mechanicService = new MechanicService();
+
 
     public static void main(String[] args) {
-        VehicleCollection vehicleCollection = startLevel6();
-        fixVehicles(vehicleCollection.getVehicleList());
-        Rent rent = rentVehicle(vehicleCollection.getVehicleList()
-                .get(Randomizer.getRandomNumber(vehicleCollection.getVehicleList().size())));
+        VehicleCollection vehicleCollection = new VehicleCollection("rents", "types", "vehicles");
+        List<Vehicle> brokenVehicles = getBrokenVehicles(vehicleCollection.getVehicleList());
+        List<Vehicle> sortingVehiclesByDefectCount = sortingVehiclesByDefectCount(brokenVehicles);
+        Writer.printList(sortingVehiclesByDefectCount);
+        Vehicle max = getVehicleWithMaxTax(brokenVehicles);
+        Writer.print(max);
+        List<Vehicle> vehiclesWithModelVolkswagen = getVehiclesWithModelVolkswagen(vehicleCollection.getVehicleList());
+        Writer.printList(vehiclesWithModelVolkswagen);
+        printVehicleWithLargestYearOfRelease(vehiclesWithModelVolkswagen);
+        VehicleWashStream.checkIn(vehicleCollection.getVehicleList());
+        VehicleWashStream.wash();
+        VehicleGarageStream.checkIn(vehicleCollection.getVehicleList());
+        VehicleGarageStream.leave();
+        repairVehicle(brokenVehicles);
+    }
+
+    private static void repairVehicle(List<Vehicle> vehicles) {
+        vehicles.forEach(vehicle -> {
+                    if (!mechanicService.isBroken(vehicle)) {
+                        Writer.print("Auto " + vehicle.getModelName() + " properly");
+                    } else {
+                        Writer.print("Auto " + vehicle.getModelName() + " has malfunctions");
+                        mechanicService.repair(vehicle);
+                    }
+                });
     }
 
 
+    private static void printVehicleWithLargestYearOfRelease(List<Vehicle> vehicles) {
+        Writer.print(vehicles.stream().max(Comparator.comparing(Vehicle::getManufactureYear)).orElse(null));
+    }
+    private static List<Vehicle> getVehiclesWithModelVolkswagen(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .filter(x -> x.getModelName().matches("(.)*Volkswagen(.)*"))
+                .collect(Collectors.toList());
+    }
+    private static List<Vehicle> getBrokenVehicles(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .filter(x -> !mechanicService.detectBreaking(x).isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    private static List<Vehicle> sortingVehiclesByDefectCount(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .sorted(comparatorByDefectCount)
+                .collect(Collectors.toList());
+    }
+
+    private static Vehicle getVehicleWithMaxTax(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .max(comparatorByTaxPerMonth).orElse(null);
+    }
     private static Rent rentVehicle(Vehicle vehicle) {
-        MechanicService mechanicService = new MechanicService();
         mechanicService.detectBreaking(vehicle);
         try {
             if (mechanicService.isBroken(vehicle)) {
