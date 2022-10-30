@@ -35,9 +35,9 @@ public class VehicleCollection {
     private static final String TEXT_TOTAL = "%-161s%.2f";
 
     public VehicleCollection(String rents, String types, String vehicles) {
-        rents = rents + ".csv";
-        types = types + ".csv";
-        vehicles = vehicles + ".csv";
+        rents = "resources/" + rents + ".csv";
+        types = "resources/" + types + ".csv";
+        vehicles = "resources/" + vehicles + ".csv";
         try {
             this.vehicleTypeList = loadTypes(types);
             this.rentList = loadRents(rents);
