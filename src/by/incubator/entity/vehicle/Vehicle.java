@@ -1,16 +1,19 @@
 package by.incubator.entity.vehicle;
 
 import by.incubator.console.Writer;
+import by.incubator.entity.Rent;
 import by.incubator.entity.engine.Startable;
 import by.incubator.entity.enums.Color;
 import by.incubator.exception.NotVehicleException;
 
+import java.util.List;
 import java.util.Objects;
 
 import static by.incubator.entity.TechnicalSpecialist.*;
 
 public class Vehicle implements Comparable<Vehicle> {
 
+    private int id;
     private VehicleType vehicleType;
     private String modelName;
     private String regNumber;
@@ -20,6 +23,8 @@ public class Vehicle implements Comparable<Vehicle> {
     private Color color;
     private double tankCapacity;
     private Startable startable;
+    private List<Rent> rents;
+
 
 
     public Vehicle() {
@@ -83,6 +88,38 @@ public class Vehicle implements Comparable<Vehicle> {
         }
     }
 
+    public Vehicle(int id, VehicleType vehicleType, String modelName, String regNumber, int weight,
+                   int manufactureYear, int mileage, Color color, Startable startable, List<Rent> rents) {
+        this.id = id;
+        try {
+            if (validateVehicleType(vehicleType)) {
+                this.vehicleType = vehicleType;
+            } else throw new NotVehicleException("Wrong vehicle type: " + vehicleType);
+            if (validateModelName(modelName)) {
+                this.modelName = modelName;
+            } else throw new NotVehicleException("Wrong model name: " + modelName);
+            if (validateRegistrationNumber(regNumber)) {
+                this.regNumber = regNumber;
+            } else throw new NotVehicleException("Wrong reg number: " + regNumber);
+            if (validateWeight(weight)) {
+                this.weight = weight;
+            } else throw new NotVehicleException("Wrong weight: " + weight);
+            if (validateManufactureYear(manufactureYear)) {
+                this.manufactureYear = manufactureYear;
+            } else throw new NotVehicleException("Wrong manufacture year: " + manufactureYear);
+            if (validateMileage(mileage)) {
+                this.mileage = mileage;
+            } else throw new NotVehicleException("Wrong mileage: " + mileage);
+            if (validateColor(color)) {
+                this.color = color;
+            } else throw new NotVehicleException("Wrong color: " + color);
+            this.startable = startable;
+            this.rents = rents;
+        } catch (NotVehicleException e) {
+            Writer.printError(e.getMessage());
+        }
+    }
+
     public double getCalcTaxPerMonth() {
         return (weight * 0.0013) + (startable.getTaxPerMonth() *
                 vehicleType.getRoadTaxCoefficient() * 30) + 5;
@@ -122,6 +159,24 @@ public class Vehicle implements Comparable<Vehicle> {
         } else {
             return this.manufactureYear - o.manufactureYear;
         }
+    }
+
+    public double getTotallIncom() {
+        return rents.stream()
+                .mapToDouble(Rent::getRentalPrice)
+                .sum();
+    }
+
+    public double getTotalProfit() {
+        return getTotallIncom() - getCalcTaxPerMonth();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public VehicleType getVehicleType() {
@@ -250,5 +305,13 @@ public class Vehicle implements Comparable<Vehicle> {
 
     public void setStartable(Startable startable) {
         this.startable = startable;
+    }
+
+    public List<Rent> getRents() {
+        return rents;
+    }
+
+    public void setRents(List<Rent> rents) {
+        this.rents = rents;
     }
 }

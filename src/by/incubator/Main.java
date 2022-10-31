@@ -1,24 +1,27 @@
 package by.incubator;
 
+import by.incubator.collection.VehicleCollection;
 import by.incubator.console.Writer;
+import by.incubator.entity.Rent;
 import by.incubator.entity.engine.DieselEngine;
 import by.incubator.entity.engine.ElectricEngine;
 import by.incubator.entity.engine.GasolineEngine;
 import by.incubator.entity.engine.Startable;
 import by.incubator.entity.sorter.Sorter;
+import by.incubator.entity.sorter.VehicleComparator;
 import by.incubator.entity.vehicle.Vehicle;
 import by.incubator.entity.vehicle.VehicleType;
 import by.incubator.entity.enums.Color;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class Main {
 
     public static void main(String[] args) {
-        VehicleType[] vehicleTypes = startLevel1();
-        startLevel2(vehicleTypes);
-        startLevel3(vehicleTypes);
+        startLevel6();
     }
 
 
@@ -175,5 +178,45 @@ public class Main {
         return Arrays.stream(vehicles)
                 .max(Comparator.comparing(vehicle -> vehicle.getStartable().getMaxKilometers()))
                 .orElse(null);
+    }
+
+    private static void startLevel6() {
+        VehicleCollection vehicleCollection = new VehicleCollection("rents", "types", "vehicles");
+        vehicleCollection.display();
+        Vehicle vehicle = createNewVehicle();
+        vehicleCollection.insert(6, vehicle);
+        vehicleCollection.delete(1);
+        vehicleCollection.delete(4);
+        vehicleCollection.display();
+        vehicleCollection.sort(new VehicleComparator());
+        vehicleCollection.display();
+    }
+
+    private static Vehicle createNewVehicle() {
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        try {
+            return new Vehicle(
+                    8,
+                    new VehicleType(
+                            "Car",
+                            1.4
+                    ),
+                    "Audi C5",
+                    "7771 AB-3",
+                    2000,
+                    2019,
+                    15500,
+                    Color.RED,
+                    new ElectricEngine(25, 70),
+                    Arrays.asList(new Rent(
+                                    format.parse("12.12.2019"),
+                                    60),
+                            new Rent(
+                                    format.parse("29.03.2019"),
+                                    90)));
+        } catch (ParseException e) {
+            Writer.printError("Wrong date format");
+        }
+        return null;
     }
 }
