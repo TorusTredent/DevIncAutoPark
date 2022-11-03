@@ -10,6 +10,7 @@ import by.incubator.entity.engine.Startable;
 import by.incubator.entity.sorter.Sorter;
 import by.incubator.entity.sorter.VehicleComparator;
 import by.incubator.entity.vehicle.Vehicle;
+import by.incubator.entity.vehicle.VehicleGarage;
 import by.incubator.entity.vehicle.VehicleType;
 import by.incubator.entity.enums.Color;
 
@@ -21,7 +22,8 @@ import java.util.Comparator;
 public class Main {
 
     public static void main(String[] args) {
-        startLevel6();
+        VehicleCollection vehicleCollection = startLevel6();
+        startLevel8(vehicleCollection);
     }
 
 
@@ -180,7 +182,7 @@ public class Main {
                 .orElse(null);
     }
 
-    private static void startLevel6() {
+    private static VehicleCollection startLevel6() {
         VehicleCollection vehicleCollection = new VehicleCollection("rents", "types", "vehicles");
         vehicleCollection.display();
         Vehicle vehicle = createNewVehicle();
@@ -190,6 +192,7 @@ public class Main {
         vehicleCollection.display();
         vehicleCollection.sort(new VehicleComparator());
         vehicleCollection.display();
+        return vehicleCollection;
     }
 
     private static Vehicle createNewVehicle() {
@@ -218,5 +221,14 @@ public class Main {
             Writer.printError("Wrong date format");
         }
         return null;
+    }
+
+    private static void startLevel8(VehicleCollection vehicleCollection) {
+        VehicleGarage vehicleGarage = new VehicleGarage();
+        for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
+            vehicleGarage.checkIn(vehicle);
+        }
+        Writer.print("Гараж заполнен");
+        vehicleCollection.getVehicleList().forEach(vehicle -> vehicleGarage.leave());
     }
 }

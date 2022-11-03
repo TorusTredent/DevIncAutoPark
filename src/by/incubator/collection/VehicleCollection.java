@@ -47,6 +47,18 @@ public class VehicleCollection {
         }
     }
 
+    public List<VehicleType> getVehicleTypeList() {
+        return vehicleTypeList;
+    }
+
+    public List<Vehicle> getVehicleList() {
+        return vehicleList;
+    }
+
+    public List<Rent> getRentList() {
+        return rentList;
+    }
+
     public void insert(int index, Vehicle vehicle) {
         if (index >= vehicleList.size() || index < 0) {
             vehicleList.add(vehicle);
