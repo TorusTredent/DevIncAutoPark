@@ -1,18 +1,18 @@
 package by.incubator;
 
-import by.incubator.level1.VehicleType;
+import by.incubator.entity.VehicleType;
 import by.incubator.level10.ComparatorByDefectCount;
 import by.incubator.level10.ComparatorByTaxPerMonth;
 import by.incubator.level10.VehicleGarageStream;
 import by.incubator.level10.VehicleWashStream;
-import by.incubator.level2.Sorter;
-import by.incubator.level2.Vehicle;
-import by.incubator.level2.Writer;
-import by.incubator.level2.enums.Color;
-import by.incubator.level4.DieselEngine;
-import by.incubator.level4.ElectricEngine;
-import by.incubator.level4.GasolineEngine;
-import by.incubator.level4.Startable;
+import by.incubator.entity.Sorter;
+import by.incubator.entity.Vehicle;
+import by.incubator.entity.Writer;
+import by.incubator.entity.enums.Color;
+import by.incubator.entity.DieselEngine;
+import by.incubator.entity.ElectricEngine;
+import by.incubator.entity.GasolineEngine;
+import by.incubator.entity.Startable;
 import by.incubator.level6.Rent;
 import by.incubator.level6.VehicleCollection;
 import by.incubator.level6.VehicleComparator;

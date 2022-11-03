@@ -1,6 +1,6 @@
 package by.incubator.level9;
 
-import by.incubator.level2.Writer;
+import by.incubator.entity.Writer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

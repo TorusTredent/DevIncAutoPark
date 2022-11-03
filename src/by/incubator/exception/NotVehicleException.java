@@ -1,4 +1,4 @@
-package by.incubator.level5;
+package by.incubator.exception;
 
 public class NotVehicleException extends Exception{
 

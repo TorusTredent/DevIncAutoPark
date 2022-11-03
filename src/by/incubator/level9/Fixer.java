@@ -1,6 +1,6 @@
 package by.incubator.level9;
 
-import by.incubator.level2.Vehicle;
+import by.incubator.entity.Vehicle;
 
 import java.util.Map;
 

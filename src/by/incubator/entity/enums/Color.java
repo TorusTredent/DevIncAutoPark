@@ -1,4 +1,4 @@
-package by.incubator.level2.enums;
+package by.incubator.entity.enums;
 
 public enum Color {
 

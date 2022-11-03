@@ -1,6 +1,6 @@
 package by.incubator.level10;
 
-import by.incubator.level2.Vehicle;
+import by.incubator.entity.Vehicle;
 import by.incubator.level9.MechanicService;
 
 import java.util.Comparator;

@@ -1,24 +1,23 @@
 package by.incubator.level6;
 
-import by.incubator.level1.VehicleType;
-import by.incubator.level2.Vehicle;
-import by.incubator.level2.Writer;
-import by.incubator.level2.enums.Color;
-import by.incubator.level4.DieselEngine;
-import by.incubator.level4.ElectricEngine;
-import by.incubator.level4.GasolineEngine;
-import by.incubator.level4.Startable;
+import by.incubator.entity.VehicleType;
+import by.incubator.entity.Vehicle;
+import by.incubator.entity.Writer;
+import by.incubator.entity.enums.Color;
+import by.incubator.entity.DieselEngine;
+import by.incubator.entity.ElectricEngine;
+import by.incubator.entity.GasolineEngine;
+import by.incubator.entity.Startable;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Watchable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static by.incubator.level2.Writer.printError;
+import static by.incubator.entity.Writer.printError;
 
 public class VehicleCollection {
 

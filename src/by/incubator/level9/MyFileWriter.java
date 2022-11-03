@@ -1,7 +1,7 @@
 package by.incubator.level9;
 
-import by.incubator.level2.Vehicle;
-import by.incubator.level2.Writer;
+import by.incubator.entity.Vehicle;
+import by.incubator.entity.Writer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

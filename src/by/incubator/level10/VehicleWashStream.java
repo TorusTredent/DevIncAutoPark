@@ -1,7 +1,7 @@
 package by.incubator.level10;
 
-import by.incubator.level2.Vehicle;
-import by.incubator.level2.Writer;
+import by.incubator.entity.Vehicle;
+import by.incubator.entity.Writer;
 import by.incubator.level7.MyArrayQueue;
 
 import java.util.ArrayList;

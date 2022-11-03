@@ -1,4 +1,4 @@
-package by.incubator.level2;
+package by.incubator.entity;
 
 public class Sorter {
     

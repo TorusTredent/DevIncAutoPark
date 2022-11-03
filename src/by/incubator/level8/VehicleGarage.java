@@ -1,7 +1,7 @@
 package by.incubator.level8;
 
-import by.incubator.level2.Vehicle;
-import by.incubator.level2.Writer;
+import by.incubator.entity.Vehicle;
+import by.incubator.entity.Writer;
 public class VehicleGarage {
 
     private static MyArrayStack<Vehicle> stack = new MyArrayStack<>();

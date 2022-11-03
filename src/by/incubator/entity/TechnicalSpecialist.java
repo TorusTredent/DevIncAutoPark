@@ -1,10 +1,6 @@
-package by.incubator.level3;
+package by.incubator.entity;
 
-import by.incubator.level1.VehicleType;
-import by.incubator.level2.enums.Color;
-import by.incubator.level4.DieselEngine;
-import by.incubator.level4.ElectricEngine;
-import by.incubator.level4.GasolineEngine;
+import by.incubator.entity.enums.Color;
 
 public class TechnicalSpecialist {
 

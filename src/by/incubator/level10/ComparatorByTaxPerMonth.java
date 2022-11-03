@@ -1,9 +1,8 @@
 package by.incubator.level10;
 
-import by.incubator.level2.Vehicle;
+import by.incubator.entity.Vehicle;
 
 import java.util.Comparator;
-import java.util.Vector;
 
 public class ComparatorByTaxPerMonth implements Comparator<Vehicle> {
 

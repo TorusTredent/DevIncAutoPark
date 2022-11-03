@@ -1,4 +1,4 @@
-package by.incubator.level4;
+package by.incubator.entity;
 
 public class GasolineEngine extends CombustionEngine{
 

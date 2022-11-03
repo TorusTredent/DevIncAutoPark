@@ -1,15 +1,13 @@
-package by.incubator.level2;
+package by.incubator.entity;
 
-import by.incubator.level1.VehicleType;
-import by.incubator.level2.enums.Color;
-import by.incubator.level4.Startable;
-import by.incubator.level5.NotVehicleException;
+import by.incubator.entity.enums.Color;
+import by.incubator.exception.NotVehicleException;
 import by.incubator.level6.Rent;
 
 import java.util.List;
 import java.util.Objects;
 
-import static by.incubator.level3.TechnicalSpecialist.*;
+import static by.incubator.entity.TechnicalSpecialist.*;
 
 public class Vehicle implements Comparable<Vehicle> {
 
