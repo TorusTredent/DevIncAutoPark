@@ -1,26 +1,26 @@
 package by.incubator;
 
-import by.incubator.entity.VehicleType;
-import by.incubator.level10.ComparatorByDefectCount;
-import by.incubator.level10.ComparatorByTaxPerMonth;
-import by.incubator.level10.VehicleGarageStream;
-import by.incubator.level10.VehicleWashStream;
-import by.incubator.entity.Sorter;
-import by.incubator.entity.Vehicle;
-import by.incubator.entity.Writer;
+import by.incubator.collection.VehicleCollection;
+import by.incubator.comparator.ComparatorByDefectCount;
+import by.incubator.comparator.ComparatorByTaxPerMonth;
+import by.incubator.comparator.VehicleComparator;
+import by.incubator.console.Writer;
+import by.incubator.entity.Rent;
+import by.incubator.entity.engine.DieselEngine;
+import by.incubator.entity.engine.ElectricEngine;
+import by.incubator.entity.engine.GasolineEngine;
+import by.incubator.entity.engine.Startable;
 import by.incubator.entity.enums.Color;
-import by.incubator.entity.DieselEngine;
-import by.incubator.entity.ElectricEngine;
-import by.incubator.entity.GasolineEngine;
-import by.incubator.entity.Startable;
-import by.incubator.level6.Rent;
-import by.incubator.level6.VehicleCollection;
-import by.incubator.level6.VehicleComparator;
-import by.incubator.level7.VehicleWash;
-import by.incubator.level8.VehicleGarage;
-import by.incubator.level9.DefectedVehicleException;
-import by.incubator.level9.MechanicService;
-import by.incubator.level9.Randomizer;
+import by.incubator.entity.vehicle.Vehicle;
+import by.incubator.entity.vehicle.garage.VehicleGarage;
+import by.incubator.entity.vehicle.VehicleType;
+import by.incubator.entity.vehicle.wash.VehicleWash;
+import by.incubator.entity.vehicle.garage.VehicleGarageStream;
+import by.incubator.entity.vehicle.wash.VehicleWashStream;
+import by.incubator.exception.DefectedVehicleException;
+import by.incubator.service.MechanicService;
+import by.incubator.sorter.Sorter;
+import by.incubator.utils.Randomizer;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,46 +32,68 @@ public class Main {
     private static final Sorter sorter = new Sorter();
     private static final ComparatorByDefectCount comparatorByDefectCount = new ComparatorByDefectCount();
     private static final ComparatorByTaxPerMonth comparatorByTaxPerMonth = new ComparatorByTaxPerMonth();
-    private static final  MechanicService mechanicService = new MechanicService();
+    private static final MechanicService mechanicService = new MechanicService();
 
 
     public static void main(String[] args) {
+        completeLvl10();
+    }
+
+    private static void completeLvl10() {
         VehicleCollection vehicleCollection = new VehicleCollection("rents", "types", "vehicles");
+
         List<Vehicle> brokenVehicles = getBrokenVehicles(vehicleCollection.getVehicleList());
         List<Vehicle> sortingVehiclesByDefectCount = sortingVehiclesByDefectCount(brokenVehicles);
+
         Writer.printList(sortingVehiclesByDefectCount);
-        Vehicle max = getVehicleWithMaxTax(brokenVehicles);
-        Writer.print(max);
-        List<Vehicle> vehiclesWithModelVolkswagen = getVehiclesWithModelVolkswagen(vehicleCollection.getVehicleList());
+        Writer.print(getVehicleWithMaxTax(brokenVehicles));
+
+        findVehiclesWithModelVolkswagen(vehicleCollection.getVehicleList());
+
+        vehicleWashStream(vehicleCollection.getVehicleList());
+        vehicleGarageStream(vehicleCollection.getVehicleList());
+
+        repairVehicle(brokenVehicles);
+    }
+
+
+    private static void vehicleWashStream(List<Vehicle> vehicles) {
+        VehicleWashStream.checkIn(vehicles);
+        VehicleWashStream.wash();
+    }
+
+    private static void vehicleGarageStream(List<Vehicle> vehicles) {
+        VehicleGarageStream.checkIn(vehicles);
+        VehicleGarageStream.leave();
+    }
+
+    private static void findVehiclesWithModelVolkswagen(List<Vehicle> vehicles) {
+        List<Vehicle> vehiclesWithModelVolkswagen = getVehiclesWithModelVolkswagen(vehicles);
         Writer.printList(vehiclesWithModelVolkswagen);
         printVehicleWithLargestYearOfRelease(vehiclesWithModelVolkswagen);
-        VehicleWashStream.checkIn(vehicleCollection.getVehicleList());
-        VehicleWashStream.wash();
-        VehicleGarageStream.checkIn(vehicleCollection.getVehicleList());
-        VehicleGarageStream.leave();
-        repairVehicle(brokenVehicles);
     }
 
     private static void repairVehicle(List<Vehicle> vehicles) {
         vehicles.forEach(vehicle -> {
-                    if (!mechanicService.isBroken(vehicle)) {
-                        Writer.print("Auto " + vehicle.getModelName() + " properly");
-                    } else {
-                        Writer.print("Auto " + vehicle.getModelName() + " has malfunctions");
-                        mechanicService.repair(vehicle);
-                    }
-                });
+            if (!mechanicService.isBroken(vehicle)) {
+                Writer.print("Auto " + vehicle.getModelName() + " properly");
+            } else {
+                Writer.print("Auto " + vehicle.getModelName() + " has malfunctions");
+                mechanicService.repair(vehicle);
+            }
+        });
     }
-
 
     private static void printVehicleWithLargestYearOfRelease(List<Vehicle> vehicles) {
         Writer.print(vehicles.stream().max(Comparator.comparing(Vehicle::getManufactureYear)).orElse(null));
     }
+
     private static List<Vehicle> getVehiclesWithModelVolkswagen(List<Vehicle> vehicles) {
         return vehicles.stream()
                 .filter(x -> x.getModelName().matches("(.)*Volkswagen(.)*"))
                 .collect(Collectors.toList());
     }
+
     private static List<Vehicle> getBrokenVehicles(List<Vehicle> vehicles) {
         return vehicles.stream()
                 .filter(x -> !mechanicService.detectBreaking(x).isEmpty())
@@ -88,6 +110,7 @@ public class Main {
         return vehicles.stream()
                 .max(comparatorByTaxPerMonth).orElse(null);
     }
+
     private static Rent rentVehicle(Vehicle vehicle) {
         mechanicService.detectBreaking(vehicle);
         try {

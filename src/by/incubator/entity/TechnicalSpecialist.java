@@ -1,6 +1,10 @@
 package by.incubator.entity;
 
+import by.incubator.entity.engine.DieselEngine;
+import by.incubator.entity.engine.ElectricEngine;
+import by.incubator.entity.engine.GasolineEngine;
 import by.incubator.entity.enums.Color;
+import by.incubator.entity.vehicle.VehicleType;
 
 public class TechnicalSpecialist {
 
