@@ -10,6 +10,7 @@ import by.incubator.entity.engine.Startable;
 import by.incubator.entity.sorter.Sorter;
 import by.incubator.entity.sorter.VehicleComparator;
 import by.incubator.entity.vehicle.Vehicle;
+import by.incubator.entity.vehicle.VehicleGarage;
 import by.incubator.entity.vehicle.VehicleType;
 import by.incubator.entity.enums.Color;
 import by.incubator.entity.vehicle.VehicleWash;
@@ -23,7 +24,7 @@ public class Main {
 
     public static void main(String[] args) {
         VehicleCollection vehicleCollection = startLevel6();
-        startLevel7(vehicleCollection);
+        startLevel8(vehicleCollection);
     }
 
 
@@ -223,6 +224,15 @@ public class Main {
         return null;
     }
 
+    private static void startLevel8(VehicleCollection vehicleCollection) {
+        VehicleGarage vehicleGarage = new VehicleGarage();
+        for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
+            vehicleGarage.checkIn(vehicle);
+        }
+        Writer.print("Гараж заполнен");
+        vehicleCollection.getVehicleList().forEach(vehicle -> vehicleGarage.leave());
+    }
+    
     private static void startLevel7(VehicleCollection vehicleCollection) {
         VehicleWash vehicleWash = new VehicleWash();
         for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
