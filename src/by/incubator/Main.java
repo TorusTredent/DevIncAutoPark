@@ -13,6 +13,7 @@ import by.incubator.entity.vehicle.Vehicle;
 import by.incubator.entity.vehicle.VehicleGarage;
 import by.incubator.entity.vehicle.VehicleType;
 import by.incubator.entity.enums.Color;
+import by.incubator.entity.vehicle.VehicleWash;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -230,5 +231,13 @@ public class Main {
         }
         Writer.print("Гараж заполнен");
         vehicleCollection.getVehicleList().forEach(vehicle -> vehicleGarage.leave());
+    }
+    
+    private static void startLevel7(VehicleCollection vehicleCollection) {
+        VehicleWash vehicleWash = new VehicleWash();
+        for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
+            vehicleWash.checkIn(vehicle);
+        }
+        vehicleCollection.getVehicleList().forEach(vehicle -> vehicleWash.wash());
     }
 }
