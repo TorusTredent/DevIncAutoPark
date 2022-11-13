@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MyFileWriter {
+
     public static void printToFile(String fileName, Vehicle vehicle, Map<String, Integer> map) {
         String line = wrapInLine(vehicle, map);
         try {
