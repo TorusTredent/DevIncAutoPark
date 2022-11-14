@@ -45,4 +45,11 @@ public class Rent {
     public void setRentalPrice(double rentalPrice) {
         this.rentalPrice = rentalPrice;
     }
+
+    @Override
+    public String toString() {
+        return  id + ", " +
+                rentalDate + ", " +
+                rentalPrice;
+    }
 }
