@@ -7,13 +7,12 @@ import by.incubator.entity.engine.DieselEngine;
 import by.incubator.entity.engine.ElectricEngine;
 import by.incubator.entity.engine.GasolineEngine;
 import by.incubator.entity.engine.Startable;
+import by.incubator.entity.enums.Color;
+import by.incubator.entity.sorter.ComparatorByDefectCount;
+import by.incubator.entity.sorter.ComparatorByTaxPerMonth;
 import by.incubator.entity.sorter.Sorter;
 import by.incubator.entity.sorter.VehicleComparator;
-import by.incubator.entity.vehicle.Vehicle;
-import by.incubator.entity.vehicle.VehicleGarage;
-import by.incubator.entity.vehicle.VehicleType;
-import by.incubator.entity.enums.Color;
-import by.incubator.entity.vehicle.VehicleWash;
+import by.incubator.entity.vehicle.*;
 import by.incubator.exception.DefectedVehicleException;
 import by.incubator.service.MechanicService;
 import by.incubator.utils.Randomizer;
@@ -21,19 +20,93 @@ import by.incubator.utils.Randomizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static by.incubator.console.Writer.print;
+import static by.incubator.console.Writer.printList;
 
 public class Main {
 
+    private static final ComparatorByDefectCount comparatorByDefectCount = new ComparatorByDefectCount();
+    private static final ComparatorByTaxPerMonth comparatorByTaxPerMonth = new ComparatorByTaxPerMonth();
+    private static final MechanicService mechanicService = new MechanicService();
+    private static final Sorter sorter = new Sorter();
+
     public static void main(String[] args) {
-        VehicleCollection vehicleCollection = startLevel6();
-        fixVehicles(vehicleCollection.getVehicleList());
-        Rent rent = rentVehicle(vehicleCollection.getVehicleList()
-                .get(Randomizer.getRandomNumber(vehicleCollection.getVehicleList().size())));
+        completeLvl10();
     }
 
 
+    private static void completeLvl10() {
+        VehicleCollection vehicleCollection = new VehicleCollection("rents", "types", "vehicles");
+        List<Vehicle> brokenVehicles = getBrokenVehicles(vehicleCollection.getVehicleList());
+
+        printList(sortingVehiclesByDefectCount(brokenVehicles));
+        print(getVehicleWithMaxTax(brokenVehicles));
+
+        findVehiclesWithModelVolkswagen(vehicleCollection.getVehicleList());
+
+        vehicleWashStream(vehicleCollection.getVehicleList());
+        vehicleGarageStream(vehicleCollection.getVehicleList());
+
+        repairVehicle(brokenVehicles);
+    }
+
+    private static void vehicleWashStream(List<Vehicle> vehicles) {
+        VehicleWashStream.checkIn(vehicles);
+        VehicleWashStream.wash();
+    }
+
+    private static void vehicleGarageStream(List<Vehicle> vehicles) {
+        VehicleGarageStream.checkIn(vehicles);
+        VehicleGarageStream.leave();
+    }
+
+    private static void findVehiclesWithModelVolkswagen(List<Vehicle> vehicles) {
+        List<Vehicle> vehiclesWithModelVolkswagen = getVehiclesWithModelVolkswagen(vehicles);
+        Writer.printList(vehiclesWithModelVolkswagen);
+        printVehicleWithLargestYearOfRelease(vehiclesWithModelVolkswagen);
+    }
+
+    private static void repairVehicle(List<Vehicle> vehicles) {
+        vehicles.forEach(vehicle -> {
+            if (!mechanicService.isBroken(vehicle)) {
+                Writer.print("Auto " + vehicle.getModelName() + " properly");
+            } else {
+                Writer.print("Auto " + vehicle.getModelName() + " has malfunctions");
+                mechanicService.repair(vehicle);
+            }
+        });
+    }
+
+    private static void printVehicleWithLargestYearOfRelease(List<Vehicle> vehicles) {
+        Writer.print(vehicles.stream().max(Comparator.comparing(Vehicle::getManufactureYear)).orElse(null));
+    }
+
+    private static List<Vehicle> getVehiclesWithModelVolkswagen(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .filter(x -> x.getModelName().matches("(.)*Volkswagen(.)*"))
+                .collect(Collectors.toList());
+    }
+
+    private static List<Vehicle> getBrokenVehicles(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .filter(x -> !mechanicService.detectBreaking(x).isEmpty())
+                .collect(Collectors.toList());
+    }
+
+    private static List<Vehicle> sortingVehiclesByDefectCount(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .sorted(comparatorByDefectCount)
+                .collect(Collectors.toList());
+    }
+
+    private static Vehicle getVehicleWithMaxTax(List<Vehicle> vehicles) {
+        return vehicles.stream()
+                .max(comparatorByTaxPerMonth).orElse(null);
+    }
+
     private static Rent rentVehicle(Vehicle vehicle) {
-        MechanicService mechanicService = new MechanicService();
         mechanicService.detectBreaking(vehicle);
         try {
             if (mechanicService.isBroken(vehicle)) {
@@ -71,21 +144,25 @@ public class Main {
                 .mapToInt(i -> i)
                 .sum();
     }
-    private static VehicleType[] startLevel1() {
-        VehicleType[] vehicleType = initVehicleTypeArray();
-        displayVehicleTypes(vehicleType);
-        vehicleType[vehicleType.length - 1].setRoadTaxCoefficient(1.3);
-        double maxTax = getMaxTax(vehicleType);
-        double allTax = getAllTax(vehicleType);
-        double averageTax = allTax / vehicleType.length;
-        combineAllTasksInCycle(vehicleType);
-        return vehicleType;
-    }
 
-    private static void combineAllTasksInCycle(VehicleType[] vehicleType) {
-        double maxTax = 0;
-        double averageTax = 0;
-        double allTax = 0;
+    private static VehicleType[] startLevel1() {
+        VehicleType[] vehicleType = initVehicleType();
+        for (VehicleType type : vehicleType) {
+            type.display();
+        }
+        vehicleType[vehicleType.length - 1].setRoadTaxCoefficient(1.3);
+        double maxTax = Arrays.stream(vehicleType)
+                .mapToDouble(VehicleType::getRoadTaxCoefficient)
+                .filter(type -> type >= 0)
+                .max()
+                .orElse(0);
+        double allTax = Arrays.stream(vehicleType)
+                .mapToDouble(VehicleType::getRoadTaxCoefficient)
+                .sum();
+        double averageTax = allTax / vehicleType.length;
+        maxTax = 0;
+        averageTax = 0;
+        allTax = 0;
         for (int i = 0; i < vehicleType.length; i++) {
             if (maxTax < vehicleType[i].getRoadTaxCoefficient()) {
                 maxTax = vehicleType[i].getRoadTaxCoefficient();
@@ -96,29 +173,10 @@ public class Main {
             }
             vehicleType[i].display();
         }
+        return vehicleType;
     }
 
-    private static double getAllTax(VehicleType[] vehicleTypes) {
-        return Arrays.stream(vehicleTypes)
-                .mapToDouble(VehicleType::getRoadTaxCoefficient)
-                .sum();
-    }
-
-    private static double getMaxTax(VehicleType[] vehicleTypes) {
-        return Arrays.stream(vehicleTypes)
-                .mapToDouble(VehicleType::getRoadTaxCoefficient)
-                .filter(type -> type >= 0)
-                .max()
-                .orElse(0);
-    }
-
-    private static void displayVehicleTypes(VehicleType[] vehicleTypes) {
-        for (VehicleType vehicleType : vehicleTypes) {
-            vehicleType.display();
-        }
-    }
-
-    private static VehicleType[] initVehicleTypeArray() {
+    private static VehicleType[] initVehicleType() {
         return new VehicleType[]{
                 new VehicleType("Bus", 1.2),
                 new VehicleType("Car", 1),
@@ -130,7 +188,7 @@ public class Main {
     private static Vehicle[] startLevel2(VehicleType[] vehicleTypes) {
         Vehicle[] vehicles = initVehicleArray(vehicleTypes);
         Writer.printArray(vehicles);
-        Sorter.sortingVehicles(vehicles);
+        sorter.sortingVehicles(vehicles);
         Writer.print("After sorting: ");
         Writer.printArray(vehicles);
         Vehicle vehicleWithMaxMileAge = findVehicleWithMaxMileAge(vehicles);
@@ -141,7 +199,7 @@ public class Main {
     }
 
     private static Vehicle[] initVehicleArray(VehicleType[] vehicleTypes) {
-        return new Vehicle[] {
+        return new Vehicle[]{
                 new Vehicle(vehicleTypes[0], "Volkswagen Crafter", "5427 AX-7",
                         2022, 2015, 376000, Color.BLUE),
                 new Vehicle(vehicleTypes[0], "Volkswagen Crafter", "62427 AA-7",
@@ -182,7 +240,7 @@ public class Main {
 
     private static Vehicle[] initVehicleArrayForLvl3(VehicleType[] vehicleTypes) {
         Startable gas = new GasolineEngine(2, 8.1, 75);
-        return new Vehicle[] {
+        return new Vehicle[]{
                 new Vehicle(vehicleTypes[0], new GasolineEngine(2, 8.1, 75),
                         "Volkswagen Crafter", "5427 AX-7", 2022,
                         2015, 376000, Color.BLUE),
@@ -267,6 +325,14 @@ public class Main {
         return null;
     }
 
+    private static void startLevel7(VehicleCollection vehicleCollection) {
+        VehicleWash vehicleWash = new VehicleWash();
+        for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
+            vehicleWash.checkIn(vehicle);
+        }
+        vehicleCollection.getVehicleList().forEach(vehicle -> vehicleWash.wash());
+    }
+
     private static void startLevel8(VehicleCollection vehicleCollection) {
         VehicleGarage vehicleGarage = new VehicleGarage();
         for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
@@ -274,13 +340,5 @@ public class Main {
         }
         Writer.print("Гараж заполнен");
         vehicleCollection.getVehicleList().forEach(vehicle -> vehicleGarage.leave());
-    }
-    
-    private static void startLevel7(VehicleCollection vehicleCollection) {
-        VehicleWash vehicleWash = new VehicleWash();
-        for (Vehicle vehicle : vehicleCollection.getVehicleList()) {
-            vehicleWash.checkIn(vehicle);
-        }
-        vehicleCollection.getVehicleList().forEach(vehicle -> vehicleWash.wash());
     }
 }
