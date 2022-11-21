@@ -9,6 +9,8 @@ import by.incubator.utils.Randomizer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MechanicService implements Fixer {
 
@@ -42,8 +44,17 @@ public class MechanicService implements Fixer {
         return getLineFromOrderFile(vehicle) != null;
     }
 
+    public static int getSumNumberOfBreaks(Vehicle vehicle) {
+        int sum = 0;
+        Pattern pattern = Pattern.compile("\\s\\d");
+        Matcher matcher = pattern.matcher(getLineFromOrderFile(vehicle));
+        while (matcher.find()) {
+            sum += Integer.parseInt(matcher.group().trim());
+        }
+        return sum;
+    }
 
-    private String getLineFromOrderFile(Vehicle vehicle) {
+    private static String getLineFromOrderFile(Vehicle vehicle) {
         List<String> list = MyFileReader.readInfo(ORDERS_FILE_NAME);
         String regex = vehicle.getId() + ".*";
 
